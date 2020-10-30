@@ -1,31 +1,50 @@
 import React, {Component} from 'react'
+import {connect} from "react-redux";
 import './App.scss'
+import Counter from "./Counter";
+import {add, addAsyncNumber, addNumber, sub} from "./redux/actions/actions";
 
 class App extends Component {
-  state = {
-    counter: 0
-  }
 
-  updateCounter(value) {
-    this.setState({
-      counter: this.state.counter + value
-    })
-  }
+    render() {
 
-  render() {
-    return (
-      <div className={'App'}>
-        <h1>Счетчик <strong>{this.state.counter}</strong></h1>
+        return (
+            <div className={'App'}>
+                <h1>Счетчик <strong>{this.props.counter}</strong></h1>
 
-        <hr/>
+                <hr/>
 
-        <div className="Actions">
-          <button onClick={() => this.updateCounter(1)}>Добавить 1</button>
-          <button onClick={() => this.updateCounter(-1)}>Вычесть 1</button>
-        </div>
-      </div>
-    )
-  }
+                <div className="Actions">
+                    <button onClick={this.props.onAdd}>Добавить 1</button>
+                    <button onClick={this.props.onSub}>Вычесть 1</button>
+                </div>
+                <div className="Actions">
+                    <button onClick={() => this.props.onAddNumber(15)}>Добавить 15</button>
+                    <button onClick={() => this.props.onAddNumber(-17)}>Вычесть 17</button>
+                </div>
+                <div className="Actions">
+                    <button onClick={() => this.props.onAsyncAddNumber(100)}>Async Добавить 100</button>
+
+                </div>
+                <Counter/>
+            </div>
+        )
+    }
 }
 
-export default App
+function mapStateToProps(state) {
+    return {
+        counter: state.counter1.counter
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onAdd: () => dispatch(add()),
+        onSub: () => dispatch(sub()),
+        onAddNumber: (number) => dispatch(addNumber(number)),
+        onAsyncAddNumber: number => dispatch(addAsyncNumber(number))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
